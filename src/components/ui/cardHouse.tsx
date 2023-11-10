@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -29,7 +28,7 @@ interface Property {
 }
 
 export function CardHouse(data: any) {
-  const { valorAvaliacao, valorAluguel, tipo, links } = data.data;
+  const { valorAvaliacao, valorAluguel, tipo, links, proprietario } = data.data;
 
   return (
     <Card className="w-full">
@@ -47,13 +46,6 @@ export function CardHouse(data: any) {
                     alt=""
                   />
                 </div>
-              </div>
-
-              <div className="absolute bottom-0 left-5 mb-3 flex">
-                <p className="flex items-center font-medium text-white shadow-sm">
-                  <i className="fa fa-camera mr-2 text-xl text-white"></i>
-                  10
-                </p>
               </div>
               <div className="absolute bottom-0 right-5 mb-3 flex">
                 <p className="flex items-center font-medium text-gray-800">
@@ -81,11 +73,11 @@ export function CardHouse(data: any) {
             <div className="mt-8 grid grid-cols-2">
               <div className="flex items-center p-4">
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage src={proprietario.imagem_link} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
 
-                <p className="line-clamp-1 ml-2">Salman Ghouri Dev</p>
+                <p className="line-clamp-1 ml-2">{proprietario.nome_completo}</p>
               </div>
             </div>
           </div>

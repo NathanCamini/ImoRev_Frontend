@@ -9,33 +9,48 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import api from "@/services/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-// type Property = {
-//   valorAvaliacao: number,
-//     valorAluguel: number,
-//     tipo: string,
-//     links: string[],
-//     matricula: number,
-//     endereco: {
-//       rua: string,
-//       numero: number,
-//       complemento: string,
-//       cidade: string,
-//       bairro: string,
-//       uf: string,
-//       cep: string,
-//     },
-// }
+type User = {
+  id: string;
+  email: string;
+  senha: string;
+  telefone: string;
+  genero: string;
+  estado_civil: string;
+  data_nascimento: Date;
+  nome_completo: string;
+  permissao: string;
+  imagem_link: string;
+  inscricao_federal: string;
+  enderecoId: string;
+  criado_em: Date;
+  atualizado_em: Date;
+};
 
 export function includeProperty() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    api
+      .get("/users/getAllUsers")
+      .then((res) => setUsers(res.data))
+      .catch((err) => {
+        setError(err.response.data.message);
+      });
+    console.log(users);
+  }, []);
+  console.log(users);
+
   const [property, setProperty] = useState({
     valorAvaliacao: 0,
     valorAluguel: 0,
     tipo: "",
     links: [""],
-    matricula: 0,
+    matricula: "",
+    proprietario: "",
     endereco: {
       rua: "",
       numero: 0,
@@ -44,7 +59,8 @@ export function includeProperty() {
       bairro: "",
       uf: "",
       cep: "",
-    }});
+    },
+  });
 
   const handleChange = (e: any) => {
     const value = e.target.value;
@@ -59,11 +75,19 @@ export function includeProperty() {
         });
   };
 
-  const handleChangeSelect = (e: any) => {
+  const handleChangeSelectType = (e: any) => {
     const value = e;
     setProperty({
       ...property,
       tipo: value,
+    });
+  };
+
+  const handleChangeSelectUser = (e: any) => {
+    const value = e;
+    setProperty({
+      ...property,
+      proprietario: value,
     });
   };
 
@@ -95,6 +119,7 @@ export function includeProperty() {
         tipo: property?.tipo,
         links: property?.links,
         matricula: property?.matricula,
+        proprietario: property?.proprietario,
         endereco: {
           rua: property?.endereco.rua,
           numero: property?.endereco.numero,
@@ -115,14 +140,20 @@ export function includeProperty() {
 
   return (
     <div className="w-screen px-4 py-5 justify-content align-items">
-      <form id="IncludeProperty" onSubmit={handleSubmit} method="post" className="flex gap-4">
+      {error && <p className="text-danger">{error}</p>}
+      <form
+        id="IncludeProperty"
+        onSubmit={handleSubmit}
+        method="post"
+        className="flex gap-4"
+      >
         <div className="grid w-full items-center gap-4">
           <div className="flex flex-col space-y-1.5">
-          <Label htmlFor="matricula">Matricula</Label>
+            <Label htmlFor="matricula">Matricula</Label>
             <Input
               id="matricula"
               name="matricula"
-              type="number"
+              type="text"
               value={property.matricula}
               onChange={handleChange}
               placeholder="Valor de avaliação do imóvel"
@@ -148,15 +179,33 @@ export function includeProperty() {
 
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="tipoPropriedade">Tipo da propriedade</Label>
-              <Select onValueChange={handleChangeSelect}>
+              <Select onValueChange={handleChangeSelectType}>
                 <SelectTrigger id="tipoPropriedade">
-                  <SelectValue placeholder="Select" />
+                  <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   <SelectItem value="CASA">CASA</SelectItem>
                   <SelectItem value="APARTAMENTO">APARTAMENTO</SelectItem>
                   <SelectItem value="TERRENO">TERRENO</SelectItem>
                   <SelectItem value="COMERCIAL">COMERCIAL</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="user">Dono do imóvel</Label>
+              <Select onValueChange={handleChangeSelectUser}>
+                <SelectTrigger id="user">
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent position="popper">
+                  {users.map((user) => {
+                    return (
+                      <SelectItem value={user.id}>
+                        {user.nome_completo}
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </div>
@@ -233,7 +282,9 @@ export function includeProperty() {
         </div>
       </form>
       <div className="flex flex-col py-4">
-        <Button form="IncludeProperty" type="submit" > Submit </Button>
+        <Button form="IncludeProperty" type="submit">
+          Submit
+        </Button>
       </div>
       <Button>
         <Link to="/"> Voltar </Link>

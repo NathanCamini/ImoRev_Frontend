@@ -5,22 +5,13 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { CardWithForm } from "@/components/ui/cardWithForm";
 import { CardHouse } from "@/components/ui/cardHouse";
 
 interface Property {
   id: string;
   valorAvaliacao: number;
   valorAluguel: number;
-  tipo: any; //////////////////////// TYPEPROPERTY
+  tipo: string; //////////////////////// TYPEPROPERTY
   links: string[];
   endereco: {
     rua: string;
@@ -47,7 +38,7 @@ export function Home() {
   }, []);
 
   return (
-    <div className="w-screen px-4 py-5 justify-content align-items">
+    <div className="px-4 py-5 justify-content align-items">
       <h1>Página Inicial</h1>
       <ModeToggle />
       {error && <p className="text-danger">{error}</p>}
