@@ -11,6 +11,7 @@ import {
 import api from "@/services/api";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 type User = {
   id: string;
@@ -32,6 +33,8 @@ type User = {
 export function includeProperty() {
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState("");
+
+  const { toast } = useToast();
 
   useEffect(() => {
     api
@@ -156,7 +159,7 @@ export function includeProperty() {
               type="text"
               value={property.matricula}
               onChange={handleChange}
-              placeholder="Valor de avaliação do imóvel"
+              placeholder="Matricula do imóvel"
             />
             <Label htmlFor="valorAvaliacao">Valor Avaliação</Label>
             <Input
@@ -282,7 +285,17 @@ export function includeProperty() {
         </div>
       </form>
       <div className="flex flex-col py-4">
-        <Button form="IncludeProperty" type="submit">
+        <Button
+          form="IncludeProperty"
+          type="submit"
+          onClick={() => {
+            toast({
+              title: "Propriedade Incluida",
+              description: `A Propriedade ${property.matricula} foi incluida com sucesso`,
+            });
+            history.back();
+          }}
+        >
           Submit
         </Button>
       </div>

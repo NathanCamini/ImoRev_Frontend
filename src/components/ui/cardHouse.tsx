@@ -10,36 +10,19 @@ import { Badge } from "@/components/ui/badge";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-interface Property {
-  id: string;
-  valorAvaliacao: number;
-  valorAluguel: number;
-  tipo: any; //////////////////////// TYPEPROPERTY
-  links: string[];
-  endereco: {
-    rua: string;
-    numero: number;
-    complemento?: string;
-    cidade: string;
-    bairro: string;
-    uf: string;
-    cep: string;
-  };
-}
 
 export function CardHouse(data: any) {
-  const { valorAvaliacao, valorAluguel, tipo, links, proprietario } = data.data;
+  const { valorAvaliacao, valorAluguel, tipo, links, proprietario, id } = data.data;
 
   return (
     <Card className="w-full">
-      <div>
         <a
-          href="#"
-          className="relative inline-block w-full transform transition-transform duration-300 ease-in-out hover:-translate-y-2"
+          href={`property/${id}`}
+          className="relative inline-block w-full transform transition-transform duration-300 ease-in-out hover:-translate-y-4"
         >
           <div className="rounded-lg shadow">
             <div className="relative flex h-52 justify-center overflow-hidden rounded-t-lg">
-              <div className="w-full transform transition-transform duration-500 ease-in-out hover:scale-110">
+              <div className="w-full transform transition-transform duration-500 ease-in-out hover:scale-105">
                 <div className="absolute inset-0 bg-black bg-opacity-80">
                   <img
                     src="https://assets.entrepreneur.com/content/3x2/2000/20150622231001-for-sale-real-estate-home-house.jpeg?crop=16:9"
@@ -65,7 +48,6 @@ export function CardHouse(data: any) {
               </h2>
               <p className="text-primary mt-2 inline-block whitespace-nowrap rounded-xl font-semibold leading-tight">
                 <span className="text-2xl">
-                  {" "}
                   Valor do Aluguel: R${valorAluguel}
                 </span>
               </p>
@@ -82,7 +64,6 @@ export function CardHouse(data: any) {
             </div>
           </div>
         </a>
-      </div>
     </Card>
   );
 }
